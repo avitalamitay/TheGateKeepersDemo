@@ -1,0 +1,211 @@
+document.addEventListener('DOMContentLoaded', function() {
+
+    // 1. מצב יום / הגחלת
+    const themeBtn = document.getElementById('theme-toggle');
+    const body = document.body;
+    
+    if (themeBtn) {
+        themeBtn.addEventListener('click', function() {
+            body.classList.toggle('light-mode');
+            if (body.classList.contains('light-mode')) {
+                themeBtn.textContent = 'לגחלת (מצב אפל)';
+            } else {
+                themeBtn.textContent = 'לעולם האנושי (מצב בהיר)';
+            }
+        });
+    }
+
+    // 2. מחולל רעיונות לדמויות
+    const generateBtn = document.getElementById('generate-btn');
+    const resultText = document.getElementById('generator-result');
+
+    const creatures = [
+        "קנטאורית",
+        "סירנה",
+        "רוח יער",
+        "גורגונה",
+        "פיה",
+        "קיטסונה",
+        "ערפד",
+        "שדת אש",
+        "נימפת מים",
+        "ג׳ין (ג׳יני)",
+        "עיפרית (ג׳ין אש עוצמתי)",
+        "אמפוסה (מפלצת דמוית אנוש שמפתה בני אדם וטורפת אותם)",
+        "מינוטאור",
+        "סימורג/רוֹק (ציפורי־ענק עם ת׳מות שונות שמחוברות אליהן)",
+        "כימרה",
+        "למאסו (יישות מגינה עם ראש אדם, גוף של אריה וכנפיים של עיט)",
+        "גריפין/היפוגריף",
+        "אחת ממאות הווריאציות של דרקונים",
+        "נחש־ים",
+        "סלקי (פיות כלבי ים שמסוגלות להסיר את הפרווה שלהן ולהפוך אנושיות)",
+        "ראקשאסה (מפלצות אוכלות אדם מהמיתולוגיה ההודית)",
+        "פוקה (משני צורה תעלולנים)",
+        "נאגה (אנשי נחש, מקושרים לאוצרות ולהגנה)",
+        "באנשי (רוח שהיללה שלה מבשרת על מוות של אהוב)",
+        "קיטסונה (רוחות שועל)",
+        "צ׳ופקאברה (מפלצת שאוכלת עצמות של חיות ואנשים ומשאירה את שאר הגוף מאחור)"
+    ];
+
+    const triggers = [
+        "כששמעת שיר ספציפי ברדיו של מונית",
+        "כשהיית קרובה למוות בתאונת דרכים",
+        "כשמצאת חפץ ישן ומוזר בשוק פשפשים",
+        "במהלך ריב סוער במיוחד עם אדם קרוב",
+        "כשמישהו זר ברחוב הסתכל לך ישר בעיניים",
+        "כשראית משהו מוזר במוזיאון",
+        "כשהכנת יצירת אמנות ממש מיוחדת",
+        "במהלך הופעה חיה שבה המוזיקה הרעידה לך את העצמות",
+        "כשנשבר לך הלב בצורה שפשוט לא ידעת איך להכיל",
+        "כשנתקעת בחוץ באמצע סופת ברקים לא הגיונית",
+        "כששחית בים בלילה והמים פתאום התחילו לזהור סביבך",
+        "כשחתול רחוב עם עיניים מוזרות סירב להפסיק לעקוב אחרייך",
+        "באמצע משמרת לילה משעממת במיוחד, כשהשעון פתאום עצר מלכת",
+        "כשמישהי זרה ברכבת לחשה לך מילה בשפה שלא קיימת – והבנת אותה",
+        "מתוך חלום מוחשי כל כך שהמשיך גם אחרי שהתעוררת",
+        "כשבהית יותר מדי זמן במדורה והאש בהתה בך חזרה",
+        "באמצע התקף חרדה בסופרמרקט בשישי בצהריים",
+        "כשקראת אגדה ישנה והבנת שהסוף שלה כתוב לגמרי לא נכון",
+        "בטיול במדבר, ברגע של שקט מוחלט שהרגיש עתיק מדי",
+        "כשעמדת על במה והרגשת שהעיניים של הקהל שורפות אותך",
+        "כשניגנת או שרת מנגינה שמעולם לא למדת, ולא הצלחת להפסיק",
+        "כשהרחת פתאום ברחוב ריח של פרחים שמעולם לא צמחו בעולם הזה",
+        "כשקעקוע שעשית מתוך גחמה פתאום הרגיש כאילו הוא זז מתחת לעור",
+        "כשכתבת סיפור באמצע הלילה, ובבוקר קלטת שזה בעצם יומן זיכרונות",
+        "כשמדדת בגד בחנות יד שנייה וזיהית במראה פנים אחרות לגמרי",
+        "בהפסקת חשמל, כשהחושך בחדר התחיל ללחוש לך בשמך האמיתי",
+        "כשההשתקפות שלך בשלולית של חורף סירבה לזוז יחד איתך",
+        "כשנגעת בעץ עתיק והרגשת את הדופק שלו פועם לך בתוך כף היד",
+        "במהלך שריפה קטנה, כשהרגשת משיכה מהפנטת לקפוץ לתוך האש",
+        "כשהצלת מישהי מסכנה עם כוח פיזי שממש לא אמור להיות לך",
+        "כשעמדת בפקק באיילון וקלטת שהנהגת ברכב לידך היא ממש לא אנושית",
+        "כשניסית להרכיב רהיט מאיקאה ומתוך ייאוש קראת בטעות לכוחות הקדומים שלך",
+        "אחרי לילה לבן של 40 שעות בלי שינה, כשהמציאות פשוט נסדקה לך מול העיניים",
+        "במסיבת פורים, כשהבנת שהתחפושת של מישהי ברחבה היא ממש לא תחפושת"
+    ];
+
+    const ages = [
+        "בגיל 18", "בגיל 24", "ממש לפני חודש", "לפני חצי שנה",
+        "לפני ארבעה ימים ו-15 שעות", "בגיל 12", "בגיל 7", "בגיל 5",
+        "בגיל 8", "בגיל 10", "בגיל 14", "בגיל 15", "בגיל 16",
+        "בגיל 17", "בגיל 19", "בגיל 20", "בגיל 21", "בגיל 22",
+        "בגיל 23", "בגיל 25", "בגיל 26", "בגיל 27"
+    ];
+
+    if (generateBtn && resultText) {
+        generateBtn.addEventListener('click', function() {
+            const randomCreature = creatures[Math.floor(Math.random() * creatures.length)];
+            const randomTrigger = triggers[Math.floor(Math.random() * triggers.length)];
+            const randomAge = ages[Math.floor(Math.random() * ages.length)];
+            
+            resultText.textContent = "היית " + randomCreature + ", ועברת התלקחות " + randomAge + ", " + randomTrigger + ".";
+        });
+    }
+
+    // 3. טיימר ספירה לאחור למפגש הבא
+    const sessionDates = [
+        new Date(2026, 11, 5, 18, 0, 0).getTime(),  // 5/12/26
+        new Date(2027, 0, 2, 18, 0, 0).getTime(),   // 2/1/27
+        new Date(2027, 1, 6, 18, 0, 0).getTime(),   // 6/2/27
+        new Date(2027, 2, 13, 18, 0, 0).getTime(),  // 13/3/27
+        new Date(2027, 3, 3, 18, 0, 0).getTime(),   // 3/4/27
+        new Date(2027, 4, 1, 18, 0, 0).getTime(),   // 1/5/27
+        new Date(2027, 5, 5, 18, 0, 0).getTime(),   // 5/6/27
+        new Date(2027, 6, 3, 18, 0, 0).getTime(),   // 3/7/27
+        new Date(2027, 7, 7, 18, 0, 0).getTime(),   // 7/8/27
+        new Date(2027, 8, 4, 18, 0, 0).getTime(),   // 4/9/27
+        new Date(2027, 9, 2, 18, 0, 0).getTime(),   // 2/10/27
+        new Date(2027, 10, 6, 18, 0, 0).getTime()   // 6/11/27
+    ];
+
+    const countdownEl = document.getElementById("countdown");
+    const daysEl = document.getElementById("days");
+    const hoursEl = document.getElementById("hours");
+    const minutesEl = document.getElementById("minutes");
+    const secondsEl = document.getElementById("seconds");
+
+    if (countdownEl && daysEl && hoursEl && minutesEl && secondsEl) {
+        let timerInterval;
+
+        function updateTimer() {
+            const now = new Date().getTime();
+            let nextSession = null;
+
+            for (let i = 0; i < sessionDates.length; i++) {
+                if (sessionDates[i] > now) {
+                    nextSession = sessionDates[i];
+                    break;
+                }
+            }
+
+            if (!nextSession) {
+                countdownEl.innerHTML = "כל המפגשים הסתיימו!";
+                if (timerInterval) clearInterval(timerInterval);
+                return;
+            }
+
+            const distance = nextSession - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            daysEl.textContent = String(days).padStart(2, '0');
+            hoursEl.textContent = String(hours).padStart(2, '0');
+            minutesEl.textContent = String(minutes).padStart(2, '0');
+            secondsEl.textContent = String(seconds).padStart(2, '0');
+        }
+
+        updateTimer();
+        timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    // 4. הדלת הסודית של הקהילה
+    const secretDoor = document.getElementById('secret-door');
+    const secretModal = document.getElementById('secret-modal');
+    const closeSecretBtn = document.getElementById('close-secret');
+
+    if (secretDoor && secretModal && closeSecretBtn) {
+        secretDoor.addEventListener('click', function() {
+            secretModal.classList.add('active');
+        });
+
+        closeSecretBtn.addEventListener('click', function() {
+            secretModal.classList.remove('active');
+        });
+    }
+
+    // 5. תפריט מובייל (המבורגר)
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const navLinks = document.getElementById('nav-links');
+
+    if (mobileBtn && navLinks) {
+        mobileBtn.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+        });
+
+        const navItems = navLinks.querySelectorAll('a');
+        navItems.forEach(function(item) {
+            item.addEventListener('click', function() {
+                navLinks.classList.remove('active');
+            });
+        });
+    }
+
+    // 6. חלון קופץ לגרסת פורטפוליו / מראיינים
+    const discordDemoBtn = document.getElementById('discord-demo-btn');
+    const recruiterModal = document.getElementById('recruiter-modal');
+    const closeRecruiterBtn = document.getElementById('close-recruiter');
+
+    if (discordDemoBtn && recruiterModal && closeRecruiterBtn) {
+        discordDemoBtn.addEventListener('click', function() {
+            recruiterModal.classList.add('active');
+        });
+
+        closeRecruiterBtn.addEventListener('click', function() {
+            recruiterModal.classList.remove('active');
+        });
+    }
+});
