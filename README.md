@@ -3,7 +3,7 @@
 ## Overview
 A custom, fully responsive Hebrew (RTL) web portal designed and built for an active, ongoing interactive live-action (LARP) campaign. Instead of scattering logistics, lore, and rules across endless messages and documents, the site serves as a centralized operational and onboarding hub for participants, delivering the same complete experience across both desktop and mobile devices.
 
-[Visit the Live Site Here!](https://avitalamitay.github.io/TheGatekeepers/)
+[Visit the Live Site Here!](https://avitalamitay.github.io/TheGateKeepersDemo/)
 
 ## Key Features
 * *Centralized Operations & Onboarding Hub:* Consolidates everything participants need in one accessible place:
